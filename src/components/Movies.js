@@ -13,8 +13,6 @@ class Movies extends Component {
         currentPage: 1
     };
 
-
-    //imperative vs declarative
     handleDelete(movie) {
         this.setState( prevState => {
             const movies = prevState.movies.filter(m => m._id !== movie._id);
@@ -28,11 +26,20 @@ class Movies extends Component {
         const filme = [...this.state.movies]
         filme[index].liked = !filme[index].liked
         this.setState({movies: filme})
-
-        const array = new Array(5).fill(null);
-        console.log(array)
     }
 
+    getCurrentMovies = (page, pageSize) => {
+        const start = page * pageSize - pageSize;
+        const end = page * pageSize;
+        return this.state.movies.slice(start, end);
+    }
+
+    pageChangedHandler = (index) => {
+        this.setState( prevstate => ({currentPage: index}))
+        this.currentMovies = this.getCurrentMovies(this.state.currentPage, this.state.pageSize);
+        console.log(index)
+    }
+    
     render() {
         
         return (
@@ -49,7 +56,7 @@ class Movies extends Component {
                     </thead>
                     <tbody>
 
-                     { this.state.movies.map( (movie, index) => (
+                     { this.getCurrentMovies(this.state.currentPage, this.state.pageSize).map( (movie, index) => (
                         <tr key={movie._id}>
                             <td>{ movie.title }</td>
                             <td>{ movie.genre.name }</td>
